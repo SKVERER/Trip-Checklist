@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>רשימת ארזה לטיול משפחתי</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '✈️';
+            font-size: 4em;
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            opacity: 0.2;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            margin-top: 10px;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e1e8ff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa726, #4ecdc4, #45b7d1, #96ceb4);
+        }
+        
+        .section:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .person-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .general-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .general-section::before {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .general-section .section-title {
+            color: white;
+            font-size: 1.6em;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .checklist-item:hover {
+            background-color: rgba(255,255,255,0.5);
+        }
+        
+        .general-section .checklist-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-left: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #ff6b6b;
+        }
+        
+        .checklist-item label {
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+        
+        .checklist-item input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            opacity: 0.6;
+            color: #28a745;
+        }
+        
+        .general-section .checklist-item input[type="checkbox"]:checked + label {
+            color: #90ee90;
+        }
+        
+        .progress-bar {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 2px solid #e1e8ff;
+            z-index: 100;
+        }
+        
+        .progress-container {
+            background: #e1e8ff;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffa726);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .stat {
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+        
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧳 רשימת ארזה לטיול משפחתי</h1>
+            <div class="subtitle">עוד רגע טסים וזה הזמן לארגן תיקים! 🤩☺️</div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number" id="totalItems">0</div>
+                    <div class="stat-label">סה"כ פריטים</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="packedItems">0</div>
+                    <div class="stat-label">נארזו</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="remainingItems">0</div>
+                    <div class="stat-label">נותרו</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="sections-grid">
+                <div class="section" id="dad-section">
+                    <div class="section-title">
+                        <div class="person-icon" style="background: #3498db;">👨</div>
+                        אבא
+                    </div>
+                    <div class="checklist" data-person="dad">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-shirts">
+                            <label for="dad-shirts">6 חולצות קצרות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-shorts">
+                            <label for="dad-shorts">5 מכנסיים קצרים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-sweatshirts">
+                            <label for="dad-sweatshirts">3 סווטשירטים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-pants">
+                            <label for="dad-pants">3 מכנסיים ארוכים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-fleece">
+                            <label for="dad-fleece">פליז</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-underwear">
+                            <label for="dad-underwear">בשקית - 6 תחתונים + 6 גרביים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-sandals">
+                            <label for="dad-sandals">סנדלים (לטיסה תעלו עם נעלי ספורט)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-shoes">
+                            <label for="dad-shoes">נעל נוספת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-games">
+                            <label for="dad-games">2-3 משחקים לנסיעות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-hat">
+                            <label for="dad-hat">כובע קיץ</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-sunglasses">
+                            <label for="dad-sunglasses">משקפי שמש</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-swimwear">
+                            <label for="dad-swimwear">בגד ים (כולל חולצה)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-binoculars">
+                            <label for="dad-binoculars">משקפת</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-towel">
+                            <label for="dad-towel">מגבת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="dad-book">
+                            <label for="dad-book">ספר</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section" id="mom-section">
+                    <div class="section-title">
+                        <div class="person-icon" style="background: #e74c3c;">👩</div>
+                        אמא
+                    </div>
+                    <div class="checklist" data-person="mom">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-shirts">
+                            <label for="mom-shirts">6 חולצות קצרות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-shorts">
+                            <label for="mom-shorts">5 מכנסיים קצרים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-sweatshirts">
+                            <label for="mom-sweatshirts">3 סווטשירטים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-pants">
+                            <label for="mom-pants">3 מכנסיים ארוכים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-fleece">
+                            <label for="mom-fleece">פליז</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-underwear">
+                            <label for="mom-underwear">בשקית - 6 תחתונים + 6 גרביים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-sandals">
+                            <label for="mom-sandals">סנדלים (לטיסה תעלו עם נעלי ספורט)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-shoes">
+                            <label for="mom-shoes">נעל נוספת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-games">
+                            <label for="mom-games">2-3 משחקים לנסיעות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-hat">
+                            <label for="mom-hat">כובע קיץ</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-sunglasses">
+                            <label for="mom-sunglasses">משקפי שמש</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-swimwear">
+                            <label for="mom-swimwear">בגד ים (כולל חולצה)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-binoculars">
+                            <label for="mom-binoculars">משקפת</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-towel">
+                            <label for="mom-towel">מגבת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="mom-book">
+                            <label for="mom-book">ספר</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section" id="aka-section">
+                    <div class="section-title">
+                        <div class="person-icon" style="background: #f39c12;">👦</div>
+                        אקא
+                    </div>
+                    <div class="checklist" data-person="aka">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-shirts">
+                            <label for="aka-shirts">6 חולצות קצרות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-shorts">
+                            <label for="aka-shorts">5 מכנסיים קצרים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-sweatshirts">
+                            <label for="aka-sweatshirts">3 סווטשירטים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-pants">
+                            <label for="aka-pants">3 מכנסיים ארוכים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-fleece">
+                            <label for="aka-fleece">פליז</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-underwear">
+                            <label for="aka-underwear">בשקית - 6 תחתונים + 6 גרביים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-sandals">
+                            <label for="aka-sandals">סנדלים (לטיסה תעלו עם נעלי ספורט)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-shoes">
+                            <label for="aka-shoes">נעל נוספת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-games">
+                            <label for="aka-games">2-3 משחקים לנסיעות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-hat">
+                            <label for="aka-hat">כובע קיץ</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-sunglasses">
+                            <label for="aka-sunglasses">משקפי שמש</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-swimwear">
+                            <label for="aka-swimwear">בגד ים (כולל חולצה)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-binoculars">
+                            <label for="aka-binoculars">משקפת</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-towel">
+                            <label for="aka-towel">מגבת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="aka-book">
+                            <label for="aka-book">ספר</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section" id="golgol-section">
+                    <div class="section-title">
+                        <div class="person-icon" style="background: #27ae60;">👧</div>
+                        גולגול פולקה
+                    </div>
+                    <div class="checklist" data-person="golgol">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-shirts">
+                            <label for="golgol-shirts">6 חולצות קצרות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-shorts">
+                            <label for="golgol-shorts">5 מכנסיים קצרים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-sweatshirts">
+                            <label for="golgol-sweatshirts">3 סווטשירטים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-pants">
+                            <label for="golgol-pants">3 מכנסיים ארוכים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-fleece">
+                            <label for="golgol-fleece">פליז</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-underwear">
+                            <label for="golgol-underwear">בשקית - 6 תחתונים + 6 גרביים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-sandals">
+                            <label for="golgol-sandals">סנדלים (לטיסה תעלו עם נעלי ספורט)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-shoes">
+                            <label for="golgol-shoes">נעל נוספת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-games">
+                            <label for="golgol-games">2-3 משחקים לנסיעות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-hat">
+                            <label for="golgol-hat">כובע קיץ</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-sunglasses">
+                            <label for="golgol-sunglasses">משקפי שמש</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-swimwear">
+                            <label for="golgol-swimwear">בגד ים (כולל חולצה)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-binoculars">
+                            <label for="golgol-binoculars">משקפת</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-towel">
+                            <label for="golgol-towel">מגבת?</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="golgol-book">
+                            <label for="golgol-book">ספר (ליהונתן ספר באנגלית)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section general-section">
+                    <div class="section-title">
+                        🎒 ציוד כללי
+                    </div>
+                    <div class="checklist" data-person="general">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-toiletries">
+                            <label for="general-toiletries">תיק כלי רחצה עם מברשת שיניים + משחת שיניים + דאודורנט + משחה לפנים + פלטה</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-soap">
+                            <label for="general-soap">סבון + שמפו</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-firstaid">
+                            <label for="general-firstaid">ערכת עזרה ראשונה</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-sunscreen">
+                            <label for="general-sunscreen">קרם הגנה</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-smallbag">
+                            <label for="general-smallbag">תיק קטן לכל אחד</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-passports">
+                            <label for="general-passports">דרכונים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-documents">
+                            <label for="general-documents">צילומי מסמכים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-food">
+                            <label for="general-food">ברכייה + פיתה וכו'</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-compressor">
+                            <label for="general-compressor">קומפקסור</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-headphones">
+                            <label for="general-headphones">אזניות</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-chargers">
+                            <label for="general-chargers">מטענים</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-eyedrops">
+                            <label for="general-eyedrops">טיפות עיניים לאבא</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="general-guidebook">
+                            <label for="general-guidebook">ספר טיולים</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress tracking
+        function updateProgress() {
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            
+            const total = allCheckboxes.length;
+            const packed = checkedBoxes.length;
+            const remaining = total - packed;
+            const percentage = total > 0 ? Math.round((packed / total) * 100) : 0;
+            
+            // Update progress bar
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '%';
+            
+            // Update stats
+            document.getElementById('totalItems').textContent = total;
+            document.getElementById('packedItems').textContent = packed;
+            document.getElementById('remainingItems').textContent = remaining;
+        }
+
+        // Add event listeners to all checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+            
+            // Initial progress update
+            updateProgress();
+        });
+
+        // Add some fun interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section:not(.general-section)');
+            sections.forEach(section => {
+                const checkboxes = section.querySelectorAll('input[type="checkbox"]');
+                const personIcon = section.querySelector('.person-icon');
+                
+                const updateSectionProgress = () => {
+                    const checkedCount = section.querySelectorAll('input[type="checkbox"]:checked').length;
+                    const totalCount = checkboxes.length;
+                    
+                    if (checkedCount === totalCount && totalCount > 0) {
+                        personIcon.style.animation = 'bounce 0.5s ease-in-out';
+                        setTimeout(() => {
+                            personIcon.style.animation = '';
+                        }, 500);
+                    }
+                };
+                
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateSectionProgress);
+                });
+            });
+        });
+
+        // Add bounce animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-10px); }
+                60% { transform: translateY(-5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
